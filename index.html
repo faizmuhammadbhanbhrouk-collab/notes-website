@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+<meta name="theme-color" content="#ff5100" />
+<title>Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-soft:#fff8f3;
+    --ink:#211a14;
+    --ink-soft:#57504a;
+    --muted:#8a7f74;
+    --line:#f0e4d8;
+    --line-strong:#e3d3c2;
+    --accent:#ff5100;
+    --accent-dark:#d63f00;
+    --accent-soft:#fff0e6;
+    --accent-softer:#fff7f0;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;min-height:100dvh;overflow-x:hidden;
+  }
+  button{font-family:inherit;cursor:pointer}
+  a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid rgba(255,81,0,.45);outline-offset:2px}
+
+  header.topbar{
+    flex:0 0 auto;background:#fff;border-bottom:1px solid var(--line);
+  }
+  .topbar-in{max-width:1120px;width:100%;margin:0 auto;padding:16px 20px 14px}
+  .title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .logo-mark{
+    width:42px;height:42px;border-radius:11px;flex:0 0 auto;
+    overflow:hidden;display:block;
+    box-shadow:0 6px 16px rgba(255,81,0,.30);
+  }
+  .logo-mark img{width:100%;height:100%;display:block}
+  h1{font-size:clamp(22px,3.4vw,28px);margin:0;font-weight:800;letter-spacing:-.4px;line-height:1.15}
+  .tagline{margin:2px 0 0;color:var(--ink-soft);font-size:13.5px}
+
+  .tabs-wrap{flex:0 0 auto;max-width:1120px;width:100%;margin:0 auto;padding:16px 20px 0}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap}
+  .tab-btn{
+    flex:1 1 150px;min-height:58px;border:1.5px solid var(--line-strong);
+    background:#fff;border-radius:var(--radius);padding:10px 14px;
+    display:flex;align-items:center;gap:11px;text-align:left;
+    transition:border-color .15s,background .15s;
+  }
+  .tab-btn:hover{border-color:var(--accent)}
+  .tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(255,81,0,.25)}
+  .tab-badge{
+    width:38px;height:38px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
+    font-weight:800;font-size:13px;background:var(--accent-soft);color:var(--accent-dark);
+  }
+  .tab-btn.active .tab-badge{background:rgba(255,255,255,.22);color:#fff}
+  .tab-name{font-weight:800;font-size:16.5px;line-height:1.1;display:block}
+  .tab-sub{font-size:12.5px;color:var(--muted);font-weight:600;display:block;margin-top:2px}
+  .tab-btn.active .tab-sub{color:rgba(255,255,255,.88)}
+
+  .pdf-bar{
+    margin-top:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    background:var(--accent-softer);border:1.5px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 14px;
+  }
+  .pdf-info{display:flex;align-items:center;gap:12px;flex:1 1 220px;min-width:0}
+  .pdf-icon{
+    width:44px;height:44px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
+    background:#211a14;color:#ffd9a8;font-weight:800;font-size:13px;letter-spacing:.5px;
+  }
+  .pdf-title{font-weight:800;font-size:15.5px;line-height:1.2}
+  .pdf-meta{font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+  .pdf-btn{
+    flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:11px 20px;border-radius:12px;text-decoration:none;
+    background:var(--accent);color:#fff;font-weight:800;font-size:15px;
+    box-shadow:0 8px 18px rgba(255,81,0,.22);transition:background .15s;white-space:nowrap;
+  }
+  .pdf-btn:hover{background:var(--accent-dark)}
+
+  .filter-bar{
+    margin-top:12px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;
+    background:#fff;border:1.5px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 14px;
+  }
+  .filter-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .filter-field label{font-size:12.5px;font-weight:800;color:var(--ink-soft)}
+  .filter-search{flex:1 1 210px}
+  .filter-select{flex:1 1 250px}
+  .topic-input,.topic-select{
+    font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);width:100%;
+    min-height:48px;padding:10px 12px;border-radius:10px;
+    border:1.5px solid var(--line-strong);background:#fff;
+  }
+  .topic-input:focus,.topic-select:focus{border-color:var(--accent)}
+  .filter-reset{
+    flex:0 0 auto;min-height:48px;padding:10px 18px;border-radius:12px;
+    border:1.5px solid var(--line-strong);background:var(--accent-soft);
+    color:var(--accent-dark);font-weight:800;font-size:14.5px;white-space:nowrap;
+    transition:border-color .15s;
+  }
+  .filter-reset:hover{border-color:var(--accent)}
+
+  main.viewer-wrap{
+    flex:1 0 auto;display:flex;flex-direction:column;
+    max-width:1120px;width:100%;margin:0 auto;padding:14px 20px 20px;
+  }
+  .viewer-shell{
+    display:flex;flex-direction:column;
+    background:#fff;border:1px solid var(--line-strong);border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(120,60,10,.07);
+  }
+  .viewer-head{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    padding:10px 14px;background:var(--bg-soft);border-bottom:1px solid var(--line);
+    font-size:13px;font-weight:700;color:var(--ink-soft);
+  }
+  .viewer-head b{color:var(--ink)}
+  .viewer-head a{color:var(--accent-dark);text-decoration:none;font-weight:800}
+  .viewer-head a:hover{text-decoration:underline}
+
+  .page-stage{
+    background:#ece7e1;padding:18px 14px 8px;
+    display:flex;justify-content:center;align-items:flex-start;
+  }
+  .page-img{
+    display:block;width:100%;max-width:760px;height:auto;
+    background:#fff;border:1px solid var(--line-strong);border-radius:4px;
+    box-shadow:0 6px 24px rgba(60,35,5,.16);
+  }
+
+  .pager{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+    padding:12px 14px 16px;background:#ece7e1;
+  }
+  .pager-btn{
+    min-height:46px;padding:10px 20px;border-radius:12px;border:1.5px solid var(--accent);
+    background:var(--accent);color:#fff;font-weight:800;font-size:15px;
+    display:inline-flex;align-items:center;gap:7px;transition:background .15s,opacity .15s;
+  }
+  .pager-btn:hover:not(:disabled){background:var(--accent-dark)}
+  .pager-btn:disabled{opacity:.38;cursor:not-allowed}
+  .pager-mid{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--ink-soft)}
+  .page-select{
+    font-family:inherit;font-weight:800;font-size:14.5px;color:var(--ink);
+    min-height:46px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line-strong);background:#fff;cursor:pointer;
+  }
+
+  footer.site-foot{
+    flex:0 0 auto;max-width:1120px;width:100%;margin:0 auto;padding:0 20px 22px;
+    color:var(--muted);font-size:13px;text-align:center;
+  }
+  footer.site-foot b{color:var(--ink-soft)}
+
+  @media (max-width:640px){
+    .topbar-in{padding:12px 14px 10px}
+    .tabs-wrap{padding:12px 14px 0}
+    .tabs{gap:8px}
+    .tab-btn{flex:1 1 96px;padding:8px 10px;min-height:52px;gap:8px}
+    .tab-badge{width:32px;height:32px;font-size:11px;border-radius:8px}
+    .tab-name{font-size:14.5px}
+    .tab-sub{font-size:11px}
+    .pdf-bar{padding:11px 12px}
+    .pdf-btn{flex:1 1 100%;width:100%}
+    .filter-bar{padding:11px 12px}
+    .filter-search,.filter-select{flex:1 1 100%}
+    .filter-reset{flex:1 1 100%;width:100%}
+    main.viewer-wrap{padding:12px 14px 14px}
+    .viewer-shell{border-radius:12px}
+    .page-stage{padding:12px 8px 4px}
+    .pager{gap:8px;padding:10px 10px 14px}
+    .pager-btn{flex:1 1 0;padding:10px 8px;font-size:14px;justify-content:center}
+    .pager-mid{order:-1;flex:1 1 100%;justify-content:center}
+    footer.site-foot{padding:0 14px 18px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="title-row">
+        <div class="logo-mark" aria-hidden="true"><img src="assets/favicon.svg" alt="" width="42" height="42" /></div>
+        <div>
+          <h1>Notes</h1>
+          <p class="tagline">HTML, CSS aur JavaScript ke notes — Roman English, page by page parho.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs-wrap">
+    <div class="tabs" role="tablist" aria-label="Subjects">
+      <button class="tab-btn active" type="button" role="tab" aria-selected="true" data-subject="html">
+        <span class="tab-badge">HTML</span>
+        <span><span class="tab-name">HTML</span><span class="tab-sub">Notes &middot; 35 pages</span></span>
+      </button>
+      <button class="tab-btn" type="button" role="tab" aria-selected="false" data-subject="css">
+        <span class="tab-badge">CSS</span>
+        <span><span class="tab-name">CSS</span><span class="tab-sub">Notes &middot; 42 pages</span></span>
+      </button>
+      <button class="tab-btn" type="button" role="tab" aria-selected="false" data-subject="js">
+        <span class="tab-badge">JS</span>
+        <span><span class="tab-name">JavaScript</span><span class="tab-sub">Notes &middot; 33 pages</span></span>
+      </button>
+    </div>
+
+    <div class="pdf-bar">
+      <div class="pdf-info">
+        <span class="pdf-icon" aria-hidden="true">PDF</span>
+        <div>
+          <div class="pdf-title" id="pdfTitle">HTML Notes PDF</div>
+          <div class="pdf-meta" id="pdfMeta">PDF file &middot; 866 KB &middot; 35 pages</div>
+        </div>
+      </div>
+      <a class="pdf-btn" id="pdfDownloadBtn" href="assets/html-notes.pdf" download="html-notes.pdf"><span aria-hidden="true">&#11015;</span> PDF Download Karo</a>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-field filter-search">
+        <input class="topic-input" id="topicSearch" type="search" placeholder="Topic search karo — maslan: Flexbox" autocomplete="off" aria-label="Topic search karo" />
+      </div>
+      <div class="filter-field filter-select">
+        <label for="topicSelect">Topic chuno — us ke page par jao</label>
+        <select class="topic-select" id="topicSelect" aria-label="Topic chuno"></select>
+      </div>
+      <button class="filter-reset" id="filterReset" type="button">Filter Hatayo</button>
+    </div>
+  </div>
+
+  <main class="viewer-wrap">
+    <section class="viewer-shell" aria-label="Notes viewer">
+      <div class="viewer-head">
+        <span>Ab khula hai: <b id="viewerName">HTML Notes</b></span>
+        <a id="openPdfLink" href="assets/html-notes.pdf" target="_blank" rel="noopener">Poora PDF alag tab mein kholo &#8599;</a>
+      </div>
+      <div class="page-stage">
+        <img class="page-img" id="pageImg" src="assets/pages/html-01.jpg" alt="HTML Notes — page 1" />
+      </div>
+      <div class="pager">
+        <button class="pager-btn" id="prevBtn" type="button" disabled>&#8592; Pichla Page</button>
+        <div class="pager-mid">
+          <label for="pageSelect">Page</label>
+          <select class="page-select" id="pageSelect" aria-label="Page chuno"></select>
+          <span id="pageTotal">/ 35</span>
+        </div>
+        <button class="pager-btn" id="nextBtn" type="button">Agla Page &#8594;</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    Teenon subjects ki asal notes — <b>HTML</b>, <b>CSS</b> aur <b>JavaScript</b>. Tab badlo, phir neeche wale buttons se page agay peeche karo.
+  </footer>
+
+<script>
+  "use strict";
+  var SUBJECTS = {
+    html: { title: "HTML Notes PDF", name: "HTML Notes", meta: "PDF file \u00B7 866 KB \u00B7 35 pages", file: "assets/html-notes.pdf", download: "html-notes.pdf", prefix: "html", pages: 35 },
+    css:  { title: "CSS Notes PDF",  name: "CSS Notes",  meta: "PDF file \u00B7 809 KB \u00B7 42 pages", file: "assets/css-notes.pdf",  download: "css-notes.pdf",  prefix: "css",  pages: 42 },
+    js:   { title: "JavaScript Notes PDF", name: "JavaScript Notes", meta: "PDF file \u00B7 561 KB \u00B7 33 pages", file: "assets/javascript-notes.pdf", download: "javascript-notes.pdf", prefix: "js", pages: 33 }
+  };
+
+  // Har topic ka naam aur us ka PDF page number (cover = page 1)
+  var TOPICS = {
+    html: [
+      ["HTML Structure", 3], ["Content Tags", 4], ["Text Formatting", 5], ["Links & Media", 6],
+      ["Lists", 7], ["Tables", 8], ["Layout Elements", 10], ["Forms", 12], ["Input Types", 14],
+      ["Semantic HTML5", 16], ["Audio & Video", 18], ["Meta Tags & SEO", 20], ["Responsive Images", 22],
+      ["Form Validation", 24], ["Advanced Form Elements", 26], ["Details, Summary & Dialog", 28],
+      ["SVG & Canvas", 30], ["Accessibility", 32], ["HTML Entities & Symbols", 34]
+    ],
+    css: [
+      ["CSS Introduction", 3], ["Colors & Backgrounds", 5], ["Borders", 6], ["Spacing - margin, padding", 8],
+      ["Dimensions", 9], ["Box Model", 11], ["Outline", 12], ["Text Styling", 13], ["Fonts", 14],
+      ["Icons", 15], ["Links Styling", 16], ["Lists Styling", 17], ["Table Styling", 18],
+      ["Display Property", 20], ["Flexbox", 21], ["Positioning", 24], ["z-index", 25], ["Overflow", 26],
+      ["Float", 27], ["CSS Transform (2D)", 28], ["Transition", 29], ["Animation", 30], ["CSS Grid", 32],
+      ["Media Queries", 33], ["CSS Variables", 34], ["Pseudo-classes & Pseudo-elements", 35],
+      ["CSS Specificity", 36], ["Gradients & Shadows", 37], ["CSS Units", 38], ["CSS Functions", 39],
+      ["Filters & Clip-path", 40], ["3D Transform", 41]
+    ],
+    js: [
+      ["Introduction", 3], ["Output Methods", 4], ["Variables", 5], ["Data Types", 6], ["Operators", 7],
+      ["Conditions", 8], ["Logical Conditions", 9], ["Switch Statement", 10], ["Loops", 11],
+      ["Functions", 12], ["Scope", 13], ["Objects", 14], ["Arrays", 15], ["Dates", 16],
+      ["Math Object", 17], ["Errors and Debugging", 18], ["JavaScript Style Guide", 19],
+      ["DOM Introduction", 20], ["DOM Selectors", 21], ["DOM Manipulation", 22], ["HTML Events", 23],
+      ["Advanced Functions", 24], ["Advanced Objects", 25], ["Classes", 26], ["Modules", 27],
+      ["Typed Arrays", 28], ["DOM Navigation", 29], ["Window Object", 30], ["JavaScript Web APIs", 31],
+      ["Async JavaScript", 32], ["jQuery Basics", 33]
+    ]
+  };
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+  var pdfTitle = document.getElementById("pdfTitle");
+  var pdfMeta = document.getElementById("pdfMeta");
+  var pdfDownloadBtn = document.getElementById("pdfDownloadBtn");
+  var viewerName = document.getElementById("viewerName");
+  var openPdfLink = document.getElementById("openPdfLink");
+  var pageImg = document.getElementById("pageImg");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var pageSelect = document.getElementById("pageSelect");
+  var pageTotal = document.getElementById("pageTotal");
+  var topicSearch = document.getElementById("topicSearch");
+  var topicSelect = document.getElementById("topicSelect");
+  var filterReset = document.getElementById("filterReset");
+
+  var currentSubject = "html";
+  var currentPage = 1;
+
+  function pad2(n){ return (n < 10 ? "0" : "") + n; }
+
+  function pageSrc(subjectKey, page){
+    var s = SUBJECTS[subjectKey];
+    return "assets/pages/" + s.prefix + "-" + pad2(page) + ".jpg";
+  }
+
+  function renderPage(){
+    var s = SUBJECTS[currentSubject];
+    pageImg.setAttribute("src", pageSrc(currentSubject, currentPage));
+    pageImg.setAttribute("alt", s.name + " \u2014 page " + currentPage);
+    pageSelect.value = String(currentPage);
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= s.pages;
+    syncTopicSelect();
+    // Agla page pehle se load kar lo taake button dabate hi page aa jaye
+    if(currentPage < s.pages){
+      var pre = new Image();
+      pre.src = pageSrc(currentSubject, currentPage + 1);
+    }
+  }
+
+  function syncTopicSelect(){
+    // Agar khula page kisi topic ka pehla page hai to dropdown me wahi topic select dikhao
+    var found = false;
+    for(var i = 0; i < topicSelect.options.length; i++){
+      if(topicSelect.options[i].value === String(currentPage) && currentPage !== 1){ found = true; break; }
+    }
+    topicSelect.value = found ? String(currentPage) : "";
+  }
+
+  function buildTopicOptions(){
+    var q = topicSearch.value.trim().toLowerCase();
+    var topics = TOPICS[currentSubject];
+    topicSelect.innerHTML = "";
+    var all = document.createElement("option");
+    all.value = "";
+    all.textContent = "Saare Topics — pehle page par jao";
+    topicSelect.appendChild(all);
+    var shown = 0;
+    topics.forEach(function(t, i){
+      if(q && t[0].toLowerCase().indexOf(q) === -1) return;
+      var opt = document.createElement("option");
+      opt.value = String(t[1]);
+      opt.textContent = (i + 1) + ". " + t[0] + " — Page " + t[1];
+      topicSelect.appendChild(opt);
+      shown++;
+    });
+    if(shown === 0){
+      var none = document.createElement("option");
+      none.value = "";
+      none.textContent = "Koi topic nahi mila";
+      none.disabled = true;
+      topicSelect.appendChild(none);
+    }
+    syncTopicSelect();
+  }
+
+  function buildPageOptions(){
+    var s = SUBJECTS[currentSubject];
+    pageSelect.innerHTML = "";
+    for(var i = 1; i <= s.pages; i++){
+      var opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = String(i);
+      pageSelect.appendChild(opt);
+    }
+    pageTotal.textContent = "/ " + s.pages;
+  }
+
+  function goToPage(n){
+    var s = SUBJECTS[currentSubject];
+    if(n < 1) n = 1;
+    if(n > s.pages) n = s.pages;
+    currentPage = n;
+    renderPage();
+  }
+
+  function selectSubject(key){
+    var s = SUBJECTS[key];
+    if(!s) return;
+    currentSubject = key;
+    currentPage = 1;
+    tabs.forEach(function(btn){
+      var isActive = btn.getAttribute("data-subject") === key;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+    pdfTitle.textContent = s.title;
+    pdfMeta.textContent = s.meta;
+    viewerName.textContent = s.name;
+    pdfDownloadBtn.setAttribute("href", s.file);
+    pdfDownloadBtn.setAttribute("download", s.download);
+    openPdfLink.setAttribute("href", s.file);
+    topicSearch.value = "";
+    buildPageOptions();
+    buildTopicOptions();
+    renderPage();
+  }
+
+  tabs.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      selectSubject(btn.getAttribute("data-subject"));
+    });
+  });
+  prevBtn.addEventListener("click", function(){ goToPage(currentPage - 1); });
+  nextBtn.addEventListener("click", function(){ goToPage(currentPage + 1); });
+  pageSelect.addEventListener("change", function(){ goToPage(parseInt(pageSelect.value, 10) || 1); });
+  topicSearch.addEventListener("input", function(){ buildTopicOptions(); });
+  topicSelect.addEventListener("change", function(){
+    var v = topicSelect.value;
+    if(v === "") goToPage(1);
+    else goToPage(parseInt(v, 10) || 1);
+  });
+  filterReset.addEventListener("click", function(){
+    topicSearch.value = "";
+    buildTopicOptions();
+    goToPage(1);
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "ArrowLeft") goToPage(currentPage - 1);
+    else if(e.key === "ArrowRight") goToPage(currentPage + 1);
+  });
+
+  buildPageOptions();
+  buildTopicOptions();
+  renderPage();
+</script>
+</body>
+</html>
